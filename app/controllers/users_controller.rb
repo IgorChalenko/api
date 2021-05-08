@@ -1,7 +1,12 @@
 class UsersController < ApplicationController
   def index
     @users = User.all
-    render json: @users
+    render json: { 'success': true,
+                   'message': 'Founded data',
+                   'data': {
+                     'users': @users
+
+                   } }
   end
 
   def show
@@ -59,7 +64,8 @@ class UsersController < ApplicationController
                        }
                      } }
     else
-      render json: { errord: 'попробуй ещё' }
+      render json: { 'success': false,
+                     'message': 'Something goes wrong' }
     end
   end
 
@@ -67,7 +73,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.destroy
     render json: { 'success': true,
-                   'message': 'User seccesfully deleted'}
+                   'message': 'User seccesfully deleted' }
   end
 
   def login
