@@ -5,7 +5,6 @@ class UsersController < ApplicationController
                    'message': 'Founded data',
                    'data': {
                      'users': @users
-
                    } }
   end
 
@@ -77,17 +76,17 @@ class UsersController < ApplicationController
   end
 
   def login
-    @user = User.find_by_email(params[:email])
-    if @user.password_digest == params[:password]
-      render json: { status: 'sucsess' }
+    @user = User.find_by_email(params[:email]).authenticate(params[:password])
+    if @user
+      render json: { 'status': 'sucsess' }
     else
-      render json: { errored: 'error' }
+      render json: { 'errored': 'error' }
     end
   end
 
   private
 
   def user_params
-    params.require(:users).permit(:name, :email, :password)
+    params.permit(:name, :email, :password)
   end
 end
