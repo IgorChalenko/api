@@ -6,16 +6,39 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    render json: { 'success': true,
+                   'message': 'User founded',
+                   'data': {
+                     'user': {
+                       'id': @user.id,
+                       'name': @user.name,
+                       'email': @user.email,
+                       'password': @user.password_digest,
+                       'created_at': @user.created_at,
+                       'updated_at': @user.updated_at
+                     }
+                   } }
   end
 
   def create
-    @user = User.new(params[:user])
-    @user.password = params[:password]
-    @user.save!
+    @user = User.new(user_params)
     if @user.save
-      render json: @user.to_json
+      render json: { 'success': true,
+                     'message': 'User created',
+                     'data': {
+                       'user': {
+                         'id': @user.id,
+                         'name': @user.name,
+                         'email': @user.email,
+                         'password': @user.password_digest,
+                         'created_at': @user.created_at,
+                         'updated_at': @user.updated_at
+                       }
+                     } }
     else
-      render json: { errord: 'попробуй ещё' }
+      render json: {  "success": false,
+                      "message": 'Invalid email or password',
+                      "data": {} }
     end
   end
 
@@ -23,7 +46,18 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.update(user_params)
     if @user.save
-      render json: @user.to_json
+      render json: { 'success': true,
+                     'message': 'User updated',
+                     'data': {
+                       'user': {
+                         'id': @user.id,
+                         'name': @user.name,
+                         'email': @user.email,
+                         'password': @user.password_digest,
+                         'created_at': @user.created_at,
+                         'updated_at': @user.updated_at
+                       }
+                     } }
     else
       render json: { errord: 'попробуй ещё' }
     end
@@ -32,14 +66,16 @@ class UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     @user.destroy
+    render json: { 'success': true,
+                   'message': 'User seccesfully deleted'}
   end
 
   def login
     @user = User.find_by_email(params[:email])
-    if @user.password == params[:password]
-      render json: { errored: "sucsess"}
+    if @user.password_digest == params[:password]
+      render json: { status: 'sucsess' }
     else
-      render json: { errored: "error" }
+      render json: { errored: 'error' }
     end
   end
 
