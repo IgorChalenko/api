@@ -11,20 +11,18 @@ module Api
       end
 
       def show
+        
         @user = User.find(params[:id])
         render json: { 'success': true,
-                      'message': 'User founded',
-                      'data': {
-                        'user': {
-                          'id': @user.id,
-                          'name': @user.name,
-                          'email': @user.email,
-                          'password': @user.password_digest,
-                          'created_at': @user.created_at,
-                          'updated_at': @user.updated_at
-                        }
-                      } }
-      end
+          'message': 'User founded',
+          'data': {
+            'user': @user                        
+          } }
+      
+      rescue ActiveRecord::RecordNotFound => e
+          render json: { 'success': false,    
+                         'message': e }      
+    end
 
       def create
         @user = User.new(user_params)
@@ -32,14 +30,7 @@ module Api
           render json: { 'success': true,
                         'message': 'User created',
                         'data': {
-                          'user': {
-                            'id': @user.id,
-                            'name': @user.name,
-                            'email': @user.email,
-                            'password': @user.password_digest,
-                            'created_at': @user.created_at,
-                            'updated_at': @user.updated_at
-                          }
+                          'user': @user                         
                         } }
         else
           render json: {  "success": false,
@@ -55,19 +46,15 @@ module Api
           render json: { 'success': true,
                         'message': 'User updated',
                         'data': {
-                          'user': {
-                            'id': @user.id,
-                            'name': @user.name,
-                            'email': @user.email,
-                            'password': @user.password_digest,
-                            'created_at': @user.created_at,
-                            'updated_at': @user.updated_at
-                          }
+                          'user': @user                         
                         } }
         else
           render json: { 'success': false,
                         'message': 'Something goes wrong' }
         end
+        rescue ActiveRecord::RecordNotFound => e
+          render json: { 'success': false,    
+                        'message': e }
       end
 
       def destroy
@@ -75,6 +62,9 @@ module Api
         @user.destroy
         render json: { 'success': true,
                       'message': 'User seccesfully deleted' }
+        rescue ActiveRecord::RecordNotFound => e
+            render json: { 'success': false,    
+                           'message': e }         
       end
 
       def login
@@ -84,6 +74,9 @@ module Api
         else
           render json: { 'errored': 'error' }
         end
+        rescue ActiveRecord::RecordNotFound => e
+          render json: { 'success': false,    
+                        'message': e }
       end
 
       private
