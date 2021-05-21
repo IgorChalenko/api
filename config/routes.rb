@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-  get 'api/v1/users', to: 'users#index'
-  get 'api/v1/users/:id', to: 'users#show', as: 'user'
-  post 'api/v1/users', to: 'users#create'
-  put 'api/v1/users/:id', to:'users#update'
-  delete 'api/v1/users/:id', to: 'users#destroy'
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :users
+      post 'users/login', to: 'sessions#create'
+    end
+  end
 end
