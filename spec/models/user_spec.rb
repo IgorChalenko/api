@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   
   describe 'Validation' do
-    subject { build(:user) } 
+    subject { create(:user) } 
     
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:email) }
