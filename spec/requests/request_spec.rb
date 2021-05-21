@@ -1,13 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe 'API', type: :request do 
-
+  subject(:user) { create!(:user) }
     it 'creating user with valid params' do
-      headers = { "ACEPT" => 'application/json'}
-      post api_v1_users_path, params: {}
+      post api_v1_users_path, params: { user: { name: :name, email: :email, password: :password, password_confirmation: :password_confirmation } }
+      expect(response.body).to include('User created')
     end
-    it 'returns status code 200' do
-      expect(response).to have_http_status(200)
-    end
+
 
 end
